@@ -1,7 +1,7 @@
 package Inline::Filters;
 use strict;
 use Config;
-$Inline::Filters::VERSION = "0.10";
+$Inline::Filters::VERSION = "0.12";
 
 #============================================================================
 # Object Interface
@@ -41,17 +41,17 @@ sub skip_quoted {
 
 sub strip_comments {
     my ($txt, $opn, $cls, @quotes) = @_;
-    my $i=-1;
+    my $i = -1;
     while (++$i < length $txt) {
 	my $closer;
-        if (scalar grep{my$r=substr($txt,$i,length($_))eq$_;$closer=$_ if$r;$r} 
-            @quotes) {
+        if (grep {my $r=substr($txt,$i,length($_)) eq $_; $closer=$_ if $r; $r}
+	    @quotes) {
 	    $i = skip_quoted($txt, $i, $closer);
 	    next;
         }
         if (substr($txt, $i, length($opn)) eq $opn) {
 	    my $e = index($txt, $cls, $i) + length($cls);
-	    substr($txt, $i, $e-$i, " ");
+	    substr($txt, $i, $e-$i) =~ s/[^\n]/ /g;
 	    $i--;
 	    next;
         }
@@ -94,32 +94,17 @@ sub Strip_TCL_Comments {
 #============================================================================
 # Preprocess C and C++
 #============================================================================
-sub Preprocess_C {
+sub Preprocess {
     my $ilsm = shift;
     my $code = shift;
-    my $tmpfile = $ilsm->{build_dir} . "/Filters.c";
-    my $cpp = $ilsm->{ILSM}{MAKEFILE}{CC} || $Config{cc}
-      . " $Config{ccflags} -I$Config{archlibexp}/CORE"
-      . " @{$ilsm->{ILSM}{MAKEFILE}{INC}||[]} -E ";
-    $ilsm->mkpath($ilsm->{build_dir});
-    open CSRC, ">$tmpfile" or die $!;
-    print CSRC $code;
-    close CSRC;
-    open PROCESSED, "$cpp $tmpfile |" or die $!;
-    $code = join'', <PROCESSED>;
-    close PROCESSED;
-    unlink $tmpfile;
-    return $code;
-}
+    my $cpp = join ' ', ($Config{cpprun},
+			 $Config{cppflags},
+			 "-I$Config{archlibexp}/CORE",
+			 @{$ilsm->{ILSM}{MAKEFILE}{INC}||[]}
+			);
 
-sub Preprocess_CPP {
-    my $ilsm = shift;
-    my $code = shift;
-    my $cpp = $ilsm->{ILSM}{MAKEFILE}{CC} 
-      . " $Config{ccflags} -I$Config{archlibexp}/CORE"
-      . " @{$ilsm->{ILSM}{MAKEFILE}{INC}||[]} -E ";
-    my $tmpfile = $ilsm->{build_dir} . "/Filters.cpp";
-    $ilsm->mkpath($ilsm->{build_dir});
+    my $tmpfile = $ilsm->{API}{build_dir} . "/Filters.c";
+    $ilsm->mkpath($ilsm->{API}{build_dir});
     open CSRC, ">$tmpfile" or die $!;
     print CSRC $code;
     close CSRC;
@@ -133,18 +118,17 @@ sub Preprocess_CPP {
 #============================================================================
 # Returns a list of key, value pairs; a filter and its code reference.
 #============================================================================
-my %filters = 
+my %filters =
   (
    ALL => [
 	   Strip_POD => \&Strip_POD,
+	   Preprocess => \&Preprocess,
 	  ],
    C => [
 	 Strip_Comments => \&Strip_C_Comments,
-	 Preprocess => \&Preprocess_C,
 	],
    CPP => [
 	   Strip_Comments => \&Strip_CPP_Comments,
-	   Preprocess => \&Preprocess_CPP,
 	  ],
    JAVA => [
 	    Strip_Comments => \&Strip_CPP_Comments,

@@ -34,23 +34,24 @@ When run, this complete program prints:
 -----------------------------------------------------------------------------
 FEATURES:
 
-This is the first release of Inline::Filters. It includes these filters:
+This is a minor release of Inline::Filters. It includes these filters:
 
-+ Strip_POD
++ Preprocess
   + All languages
 + Strip_Comments
   + C
   + C++
   + Java
   + Python
-+ Preprocess
-  + C
-  + C++
++ Strip_POD
+  + All languages
+
+As a bonus, the documentation has greatly improved.
 
 -----------------------------------------------------------------------------
 INSTALLATION:
 
-This module requires Inline.pm version 0.33 or higher to be installed.
+This module requires Inline.pm version 0.42 or higher to be installed.
 
 To install Inline::Filters do this:
 

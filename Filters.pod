@@ -83,7 +83,7 @@ compilers to parse the code, and these compilers know about comments.
 
 =head2 Preprocess
 
-Only available for C and C++. Uses the system's C (or C++) compiler to 
+Now available for all languages. Uses the C pre-processor ($Config{cpprun}) to 
 pre-process a block of code. This is useful if you want to expand macros 
 and conditional code before parsing. For example:
 
@@ -102,24 +102,47 @@ since the Inline::CPP grammar can't understand preprocessor directives.
 
 =head1 DETAILS
 
-Internally, source code filters are implemented as a blessed reference to a
-hash containing two elements: 'name' is the name of the filter, and 'coderef'
+=head2 Built-in Filters
+
+Built-in source code filters are implemented as a blessed reference to a
+hash containing two elements: 'filter' is the name of the filter, and 'coderef'
 is a code reference to the appropriate filter. The object has a filter() 
 method, which should be called with the ILSM object as the first parameter,
 and source code as the second parameter. The filters always return the filtered
 code. 
 
-C<Inline> provides a filter() method which applies the requested filters one 
-after the other on the source code. C<Inline::C> and C<Inline::CPP> call 
-C<$o->filter()> before parsing.
+=head2 User-supplied Filters
+
+As of Inline 0.42, you can supply your own filters to Inline by passing a
+code reference to the FILTERS option, like this:
+
+   sub my_filter { };
+   use Inline C => DATA => FILTERS => [\&my_filter];
+
+The filter sub is passed one argument: the unfiltered code. It must return
+the filtered code as its only return value. If something goes wrong and you
+need to pass inform the user, just croak.
+
+Note: in some circumstances, you I<must> put your filter subroutine I<above> 
+the C<use Inline> statement. When possible, Inline compiles your code
+at compile time, meaning the subroutine must be defined. If you're reading 
+code from the 'DATA' filehandle, you can put the filter anywhere in your
+script, since Inline delays compilation until runtime.
+
+=head2 Applying Filters
+
+C<Inline> provides a filter() method which applies the requested filters one
+after the other on the source code. All ILSMs should save the result of 
+$o->filter() and consider it the source code. If no filters have been 
+requested, this just returns the unfiltered source code.
 
 =head1 SEE ALSO
 
 For more information about specifying Inline source code filters, see
-L<Inline::C> or L<Inline::CPP>. 
+L<Inline::C> or L<Inline::CPP>.
 
-For more information about using other languages inside Perl, see L<Inline>. 
-For more information about using C from Perl, see L<Inline::C>. 
+For more information about using other languages inside Perl, see L<Inline>.
+For more information about using C from Perl, see L<Inline::C>.
 
 =head1 BUGS OR OMISSIONS
 
