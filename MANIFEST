@@ -1,0 +1,8 @@
+MANIFEST
+Makefile.PL
+Filters.pm
+Filters.pod
+README
+t/Preprocess.t
+t/Strip_Comments.t
+t/Strip_POD.t

@@ -1,0 +1,145 @@
+=head1 NAME
+
+Inline::Filters - Common source code filters for Inline Modules.
+
+=head1 DESCRIPTION
+
+C<Inline::Filters> provides common source code filters to Inline Language 
+Modules. Unless you're an Inline module developer, you can just read the 
+next section.
+
+=head1 Supported Filters
+
+This section describes each filter in Inline::Filters.
+
+=head2 Strip_POD
+
+Strips embedded POD from a block of code in any language. This is implemented 
+as a regular expression:
+
+   $code =~ s/^=\w+[^\n]*\n\n(.*?)(^=cut\n\n|\Z)//gsm;
+
+That means if you have a language which contains POD-like syntax, it will be 
+stripped by this filter (i.e. don't use this filter with such a language). 
+This filter is useful for making code like this compile:
+
+   use Inline C => <<'END', FILTERS => 'Strip_POD';
+   =head1 add
+
+   Returns the sum of two integers.
+
+   =cut
+
+   int add(int x, int y) { return x + y; }
+   END
+
+=head2 Strip_Comments
+
+Strips comments from a block of code in whatever language you are using. 
+The comment stripper is string-safe -- i.e. it will not strip comments 
+embedded in strings. 
+
+The feature is useful because both the C and C++ grammars cannot deal with
+comments at arbitrary points in the source code; to do so would bloat the
+grammar. Instead, code like this should have its comments stripped before
+parsing:
+
+   use Inline C => <<'END', FILTERS => 'Strip_Comments';
+
+   int md5_block(char *block,   /* the block to operate on */
+		 long length,   /* the number of bytes */
+		 char **result) /* the resulting 128-bit sum */
+   {
+	/* some code here */
+   }
+
+   END
+
+Strip_Comments is available for the following languages:
+
+=over 4
+
+=item 1
+
+C
+
+=item 2
+
+C++
+
+=item 3
+
+Python
+
+=item 4
+
+Java
+
+=back
+
+The Python and Java filters are available for convenience only. There is little
+need for them, since Inline::Python and Inline::Java use the official language
+compilers to parse the code, and these compilers know about comments. 
+
+=head2 Preprocess
+
+Only available for C and C++. Uses the system's C (or C++) compiler to 
+pre-process a block of code. This is useful if you want to expand macros 
+and conditional code before parsing. For example:
+
+   use Inline CPP => <<'END', FILTERS => 'Preprocess';
+   class Foo
+   #ifdef FOO_INHERITS_BAR
+      : public Bar
+   #endif
+   {
+
+   };
+   END
+
+The code shown above will not parse correctly without the Preprocess filter,
+since the Inline::CPP grammar can't understand preprocessor directives.
+
+=head1 DETAILS
+
+Internally, source code filters are implemented as a blessed reference to a
+hash containing two elements: 'name' is the name of the filter, and 'coderef'
+is a code reference to the appropriate filter. The object has a filter() 
+method, which should be called with the ILSM object as the first parameter,
+and source code as the second parameter. The filters always return the filtered
+code. 
+
+C<Inline> provides a filter() method which applies the requested filters one 
+after the other on the source code. C<Inline::C> and C<Inline::CPP> call 
+C<$o->filter()> before parsing.
+
+=head1 SEE ALSO
+
+For more information about specifying Inline source code filters, see
+L<Inline::C> or L<Inline::CPP>. 
+
+For more information about using other languages inside Perl, see L<Inline>. 
+For more information about using C from Perl, see L<Inline::C>. 
+
+=head1 BUGS OR OMISSIONS
+
+You can pass in arbitrary subroutine references as filters. However, if you
+find yourself using a filter on a regular basis and you'd like to see it 
+included in Inline::Filters, please contact me. 
+
+If you wish to report a bug, please refer to L<Inline> for instructions on 
+how to submit a bug report.
+
+=head1 AUTHOR
+
+Neil Watkiss (NEILW@cpan.org)
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001, Neil Watkiss.
+
+This module is free software. It may be used, redistributed and/or modified
+under the same terms as Perl itself.
+
+(see http://www.perl.com/perl/misc/Artistic.html)
+
