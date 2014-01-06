@@ -1,6 +1,9 @@
 Revision history for Perl extension Inline::Struct.
-
-0.11  Sat Apr 28 23:07:37 PDT 2001
+0.12_01 Wed Dec 04 2013
+	- Fix Preprocess sub so make test passes (INC is always a string, not @ ref)
+0.12  Mon June 11 2001
+	-no entry supplied
+0.11  Sat Apr 28 23:07:37 PDT 2001 (never released)
 	- Use $Config{cpprun} as the preprocessor
 
 0.10  Sat Apr 28 23:07:37 PDT 2001

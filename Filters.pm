@@ -1,7 +1,7 @@
 package Inline::Filters;
 use strict;
 use Config;
-$Inline::Filters::VERSION = "0.12";
+$Inline::Filters::VERSION = "0.12_01";
 
 #============================================================================
 # Object Interface
@@ -100,7 +100,7 @@ sub Preprocess {
     my $cpp = join ' ', ($Config{cpprun},
 			 $Config{cppflags},
 			 "-I$Config{archlibexp}/CORE",
-			 @{$ilsm->{ILSM}{MAKEFILE}{INC}||[]}
+			 $ilsm->{ILSM}{MAKEFILE}{INC}
 			);
 
     my $tmpfile = $ilsm->{API}{build_dir} . "/Filters.c";
