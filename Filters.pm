@@ -1,7 +1,7 @@
 package Inline::Filters;
 use strict;
 use Config;
-$Inline::Filters::VERSION = "0.12_01";
+$Inline::Filters::VERSION = "0.12_02";
 
 #============================================================================
 # Object Interface
@@ -97,10 +97,24 @@ sub Strip_TCL_Comments {
 sub Preprocess {
     my $ilsm = shift;
     my $code = shift;
+
+    my @inc_array;
+    if (defined($ilsm->{ILSM}{MAKEFILE}{INC})) {
+      if (ref($ilsm->{ILSM}{MAKEFILE}{INC} eq 'ARRAY')) {
+        @inc_array = @{$ilsm->{ILSM}{MAKEFILE}{INC}};
+      }
+      else {
+        @inc_array = ($ilsm->{ILSM}{MAKEFILE}{INC});
+      }
+    }
+    else {
+      @inc_array = ();
+    }
+
     my $cpp = join ' ', ($Config{cpprun},
 			 $Config{cppflags},
 			 "-I$Config{archlibexp}/CORE",
-			 $ilsm->{ILSM}{MAKEFILE}{INC}
+                         @inc_array
 			);
 
     my $tmpfile = $ilsm->{API}{build_dir} . "/Filters.c";
