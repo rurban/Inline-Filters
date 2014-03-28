@@ -33,7 +33,7 @@ This filter is useful for making code like this compile:
    int add(int x, int y) { return x + y; }
    END
 
-=head2 Strip_Comments
+=head2 Strip Comments
 
 Strips comments from a block of code in whatever language you are using. 
 The comment stripper is string-safe -- i.e. it will not strip comments 
@@ -59,21 +59,15 @@ Strip_Comments is available for the following languages:
 
 =over 4
 
-=item 1
+=item Strip_C_Comments
 
-C
+=item Strip_CPP_Comments
 
-=item 2
+=item Strip_Python_Comments
 
-C++
+=item Strip_TCL_Comments
 
-=item 3
-
-Python
-
-=item 4
-
-Java
+=item Java via Strip_CPP_Comments
 
 =back
 
@@ -135,6 +129,14 @@ C<Inline> provides a filter() method which applies the requested filters one
 after the other on the source code. All ILSMs should save the result of 
 $o->filter() and consider it the source code. If no filters have been 
 requested, this just returns the unfiltered source code.
+
+=head2 filter (object, coderef) METHOD
+
+=head2 new (filter, coderef) METHOD
+
+=head2 get_filters (language) FUNCTION
+
+returns all supported languages
 
 =head1 SEE ALSO
 

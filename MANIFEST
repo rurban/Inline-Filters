@@ -1,4 +1,5 @@
 Changes
+LICENSE
 MANIFEST
 Makefile.PL
 Filters.pm
@@ -7,5 +8,8 @@ README
 t/Preprocess.t
 t/Strip_Comments.t
 t/Strip_POD.t
-META.yml                                 Module YAML meta-data (added by MakeMaker)
-META.json                                Module JSON meta-data (added by MakeMaker)
+t/z_kwalitee.t
+t/z_meta.t
+t/z_perl_minimum_version.t
+t/z_pod-coverage.t
+t/z_pod.t
