@@ -1,7 +1,7 @@
 package Inline::Filters;
 use strict;
 use Config;
-$Inline::Filters::VERSION = "0.12_03";
+$Inline::Filters::VERSION = "0.13";
 
 #============================================================================
 # Object Interface
