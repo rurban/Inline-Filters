@@ -1,5 +1,12 @@
 Revision history for Perl extension Inline::Filters.
 
+0.14 2014-04-01 (rurban)
+	- Require Inline::C explicitly due to failing cpantesters
+        - use File::Spec->catfile and isolated tmpfiles for Preprocess
+
+0.13 2014-03-28 (rurban)
+	- no changes
+
 0.12_03 2014-03-28 (rurban)
 	- Version bump since ~acanfora uploaded a rogue 0.12_02,
         which failed its tests.

@@ -1,7 +1,8 @@
 package Inline::Filters;
 use strict;
 use Config;
-$Inline::Filters::VERSION = "0.13";
+$Inline::Filters::VERSION = "0.14";
+use File::Spec;
 
 #============================================================================
 # Object Interface
@@ -117,13 +118,13 @@ sub Preprocess {
                          @inc_array
 			);
 
-    my $tmpfile = $ilsm->{API}{build_dir} . "/Filters.c";
+    my $tmpfile = File::Spec->catfile($ilsm->{API}{build_dir}, "Filters$$.c");
     $ilsm->mkpath($ilsm->{API}{build_dir});
-    open CSRC, ">$tmpfile" or die $!;
+    open CSRC, ">", $tmpfile or die $!;
     print CSRC $code;
     close CSRC;
     open PROCESSED, "$cpp $tmpfile |" or die $!;
-    $code = join'', <PROCESSED>;
+    $code = join '', <PROCESSED>;
     close PROCESSED;
     unlink $tmpfile;
     return $code;
