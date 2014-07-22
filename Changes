@@ -1,5 +1,9 @@
 Revision history for Perl extension Inline::Filters.
 
+0.15 2014-07-22 (rurban)
+	- add repo, author and license meta, add LICENSE
+	- best practices: our $VERSION, open $fh, no GLOB.
+
 0.14 2014-04-01 (rurban)
 	- Require Inline::C explicitly due to failing cpantesters
         - use File::Spec->catfile and isolated tmpfiles for Preprocess

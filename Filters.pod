@@ -150,14 +150,18 @@ For more information about using C from Perl, see L<Inline::C>.
 
 You can pass in arbitrary subroutine references as filters. However, if you
 find yourself using a filter on a regular basis and you'd like to see it 
-included in Inline::Filters, please contact me. 
+included in Inline::Filters, please file a bug report.
 
 If you wish to report a bug, please refer to L<Inline> for instructions on 
 how to submit a bug report.
 
+L<https://rt.cpan.org/Public/Dist/Display.html?Name=Inline-Filters>
+
 =head1 AUTHOR
 
 Neil Watkiss (NEILW@cpan.org)
+
+Maintained now by the perl11 team: https://github.com/perl11/Inline-Filters
 
 =head1 COPYRIGHT
 
