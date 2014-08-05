@@ -1,7 +1,7 @@
 package Inline::Filters;
 use strict;
 use Config;
-our $VERSION = "0.15";
+our $VERSION = "0.16";
 use File::Spec;
 
 #============================================================================

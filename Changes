@@ -1,5 +1,8 @@
 Revision history for Perl extension Inline::Filters.
 
+0.16 2014-08-05 (rurban)
+	- improved license link in the pod (RT #97755 by ppisar)
+
 0.15 2014-07-22 (rurban)
 	- add repo, author and license meta, add LICENSE
 	- best practices: our $VERSION, open $fh, no GLOB.
