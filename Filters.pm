@@ -1,9 +1,9 @@
 package Inline::Filters;
 use strict;
 use Config;
-our $VERSION = "0.16";
+our $VERSION = "0.17";
 use File::Spec;
-
+ 
 #============================================================================
 # Object Interface
 #============================================================================
@@ -112,8 +112,13 @@ sub Preprocess {
       @inc_array = ();
     }
 
+    my $cppflags = q{};
+    if (defined $ilsm->{CONFIG}->{CPPFLAGS}) {
+        $cppflags = $ilsm->{CONFIG}->{CPPFLAGS};
+    }
     my $cpp = join ' ', ($Config{cpprun},
 			 $Config{cppflags},
+			 $cppflags,
 			 "-I$Config{archlibexp}/CORE",
                          @inc_array
 			);

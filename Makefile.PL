@@ -4,10 +4,10 @@ WriteMakefile(
   NAME => 'Inline::Filters',
   VERSION_FROM => 'Filters.pm',
   ABSTRACT => 'Common source code filters for Inline Modules',
-  AUTHOR => 'Neil Watkiss',
+  AUTHOR => 'Neil Watkiss, Reini Urban, Will Braswell',
   PREREQ_PM => {
     Inline    => 0.42,
-    Inline::C => 0.42,
+    Inline::C => 0.76,
   },
   clean => {FILES => '_Inline/'},
   ($ExtUtils::MakeMaker::VERSION gt '6.46' ?
