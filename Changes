@@ -1,5 +1,8 @@
 Revision history for Perl extension Inline::Filters.
 
+0.17 2015-06-23 (rurban)
+	- added CPPFLAGS by wbraswell, with Inline::C 0,76 only
+
 0.16 2014-08-05 (rurban)
 	- improved license link in the pod (RT #97755 by ppisar)
 
