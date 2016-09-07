@@ -1,5 +1,8 @@
 Revision history for Perl extension Inline::Filters.
 
+0.18 2016-09-07 (rurban)
+	- Allow a space in paths (#3) - bulk88
+
 0.17 2015-06-23 (rurban)
 	- added CPPFLAGS by wbraswell, with Inline::C 0.76 only
 
