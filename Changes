@@ -1,5 +1,9 @@
 Revision history for Perl extension Inline::Filters.
 
+0.19 2017-01-24 (wbraswell)
+	- Enable CLEAN_AFTER_BUILD Argument In Preprocess Filter
+        For Compatibility With gdb For Inline::C(PP) Debugging
+
 0.18 2016-09-07 (rurban)
 	- Allow a space in paths (#3) - bulk88
 

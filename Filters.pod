@@ -94,6 +94,8 @@ and conditional code before parsing. For example:
 The code shown above will not parse correctly without the Preprocess filter,
 since the Inline::CPP grammar can't understand preprocessor directives.
 
+=head3 CPPFLAGS Argument
+
 Also available is the CPPFLAGS argument, to specify C preprocessor directives.
 
     use Inline C => <<'END' => CPPFLAGS => ' -DPREPROCESSOR_DEFINE' => FILTERS => 'Preprocess';
@@ -105,6 +107,43 @@ Also available is the CPPFLAGS argument, to specify C preprocessor directives.
     END
 
 The code shown above will return 4321 when foo() is called.
+
+=head3 CLEAN_AFTER_BUILD Argument
+
+By default, the Preprocess filter deletes all F<Filters*.c> files it creates.
+If you set the CLEAN_AFTER_BUILD flag to false, then the C<Filters*.c> files
+will not be deleted; this is necessary when using C<gdb> to debug Inline::C
+and Inline::CPP programs which utilize the Preprocess filter.
+
+If you do not set the CLEAN_AFTER_BUILD flag to false, you will likely end up
+with a "No such file or directory" error in gdb:
+
+    use Inline C => <<'END' => FILTERS => 'Preprocess';
+    // your code here
+    END
+
+$ gdb /usr/bin/perl
+(gdb) run ./my_script.pl arg0 arg1
+...
+Thread 1 "perl" received signal SIGSEGV, Segmentation fault.
+MyPackage::my_method (this=this@entry=0x1234567, my_arg=my_arg@entry=23)
+    at /.../_Inline/build/eval_XXX_YYYY/FiltersZZZZ.c:42
+42    /.../_Inline/build/eval_XXX_YYYY/FiltersZZZZ.c: No such file or directory.
+
+If you do set the CLEAN_AFTER_BUILD flag to false, you should see the actual
+offending C or C++ code in gdb:
+
+    use Inline C => <<'END' => CLEAN_AFTER_BUILD => 0 => FILTERS => 'Preprocess';
+    // your code here
+    END
+
+$ gdb /usr/bin/perl
+(gdb) run ./my_script.pl arg0 arg1
+...
+Thread 1 "perl" received signal SIGSEGV, Segmentation fault.
+MyPackage::my_method (this=this@entry=0x1234567, my_arg=my_arg@entry=23)
+    at /.../_Inline/build/eval_XXX_YYYY/FiltersZZZZ.c:42
+42    YOU SHOULD SEE YOUR ACTUAL OFFENDING CODE HERE
 
 =head1 DETAILS
 
