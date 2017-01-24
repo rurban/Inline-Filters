@@ -1,7 +1,7 @@
 package Inline::Filters;
 use strict;
 use Config;
-our $VERSION = "0.18";
+our $VERSION = "0.19";
 use File::Spec;
  
 #============================================================================
@@ -132,7 +132,13 @@ sub Preprocess {
     open $PROCESSED, "$cpp \"$tmpfile\" |" or die $!;
     $code = join '', <$PROCESSED>;
     close $PROCESSED;
-    unlink $tmpfile;
+
+    # default yes, will remove Filters*.c files, this is the same config option used by Inline::C(PP);
+    # must disable when using gdb to debug Inline::C(PP) code
+    if ((not defined $ilsm->{CONFIG}->{CLEAN_AFTER_BUILD}) or $ilsm->{CONFIG}->{CLEAN_AFTER_BUILD}) {
+        unlink $tmpfile;
+    }
+
     return $code;
 }
 
